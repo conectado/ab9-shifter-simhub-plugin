@@ -611,8 +611,11 @@ Centring the pattern on the axis is right for three columns and wrong for four w
 has a centring spring of its own. A three-column gate has its home column on the axis centre. A
 four-column gate has the *barrier between the 3-4 and 5-6 columns* there, and the AB9's onboard
 spring centres on the axis, not on a column. With Spring 50 the lever was parked on that barrier:
-the hump pushes it off, the spring brings it back, and the yield takes more out of the inward
-pass than the outward one, so the pair pumps energy instead of losing it. Traced as a 16 Hz,
+the hump pushes it off and the spring brings it back. The energy comes from the round trip, not
+from the yield: the hump's face at that tune is far steeper than a wall's (16.6 DI per count at the
+crest against the walls' 2.4), and a lever model with the measured delay reproduces the bounce
+while the same model with no delay settles. Moving the home column only stops the lever being
+parked there; it does not make that hump stable. Traced as a 16 Hz,
 +/-1900-count lateral bounce in neutral on 6+R that needed only a return from a gear to start
 and never decayed (trace-20261116-174017, barrier 40.2% at width 400, pattern width 60). The
 same tune on 5+R is quiet, and the same lever sat still on 6+R until it was disturbed.
