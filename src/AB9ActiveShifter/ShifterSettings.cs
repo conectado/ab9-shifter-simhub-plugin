@@ -498,6 +498,32 @@ namespace AB9ActiveShifter
 
         public double BarrierForcePct { get { return _barrierForcePct; } set { Set(ref _barrierForcePct, value); } }
 
+        /// <summary>
+        /// True when the barrier as dialled would be steeper than the walls, so the gate renders it
+        /// wider than <see cref="BarrierWidth"/> says. Asked of the composer's own rule, never a copy.
+        /// </summary>
+        public bool BarrierIsWidened
+        {
+            get
+            {
+                return BarrierForcePct > 0
+                    && ForceComposer.BarrierWidthFloor(BarrierForcePct, ColumnPinForcePct, WallRamp) > BarrierWidth;
+            }
+        }
+
+        /// <summary>The sentence the Feel page shows while <see cref="BarrierIsWidened"/> is true.</summary>
+        public string BarrierWidenedNote
+        {
+            get
+            {
+                if (!BarrierIsWidened) return "";
+                int floor = ForceComposer.BarrierWidthFloor(BarrierForcePct, ColumnPinForcePct, WallRamp);
+                return "At this strength the click is rendered " + floor + " counts wide, not " + BarrierWidth
+                    + ": a narrower one would be steeper than the walls, and a lever resting against it does not settle. "
+                    + "Lower the click strength for a shorter click.";
+            }
+        }
+
         /// <summary>Neutral spring toward the 3/4 column. Zero - the default - is off.</summary>
         public double HomeSpringPct { get { return _homeSpringPct; } set { Set(ref _homeSpringPct, value); } }
 
@@ -1406,6 +1432,14 @@ namespace AB9ActiveShifter
         {
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+
+            // The four dials the barrier's steepness limit reads. One place, so no setter can forget.
+            if (handler != null && (propertyName == "BarrierForcePct" || propertyName == "BarrierWidth"
+                || propertyName == "ColumnPinForcePct" || propertyName == "WallRamp"))
+            {
+                handler(this, new PropertyChangedEventArgs("BarrierIsWidened"));
+                handler(this, new PropertyChangedEventArgs("BarrierWidenedNote"));
+            }
         }
     }
 }

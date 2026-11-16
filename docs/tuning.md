@@ -347,7 +347,7 @@ protocol evidence and current hardware verification limits.
 | Control | What it changes |
 | --- | --- |
 | **Lockout width (0–100)** | How far you must push through the lockout. Wider makes accidental crossings harder, even during a quick movement. |
-| **Width of clicks between gear pairs (0–100)** | How broad the small bumps between gear pairs feel. Lower gives short clicks; higher gives broader rises. |
+| **Width of clicks between gear pairs (0–100)** | How broad the small bumps between gear pairs feel. Lower gives short clicks; higher gives broader rises. A strong click cannot also be narrow: the gate widens it so it is never steeper than the walls, and the page says when it has. Lower **Clicks between gear pairs (%)** for a shorter click. |
 
 ### Advanced gear detection
 

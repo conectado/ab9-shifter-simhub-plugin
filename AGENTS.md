@@ -48,7 +48,7 @@ dotnet build
 dotnet test tests/AB9ActiveShifter.Tests
 ```
 
-833 tests, all green, none touching I/O — `Core/`, the settings POCO's derived-dial arithmetic,
+842 tests, all green, none touching I/O — `Core/`, the settings POCO's derived-dial arithmetic,
 the pure release parser in `Updates/ReleaseInfo.cs`, and role output through a fake API. Keep them that way — they are the only
 automated check on force arithmetic, and a sign error here drives a 12 Nm base the wrong way.
 
@@ -222,6 +222,8 @@ tests/AB9ActiveShifter.Tests/
                            free, the wall only pushes home, and no axis count steps the stroke
   PatternWidthTests.cs     How wide the pattern stands: the default is the old geometry to the
                            count, narrowing is centred, and no bare axis loses its column
+  BarrierSlopeTests.cs    A barrier is never steeper than the walls: the traced neutral bounce dies in
+                           the lever model, the bound binds exactly, presets are untouched
   PatternEdgeWallTests.cs  The wall a narrowed pattern needs at its sides: one-way, zero inside,
                            inert at full width, and the angled mouth step it is NOT
   LockoutPlacementTests.cs Where the placement dial actually lands the gate, per pattern,
@@ -443,7 +445,10 @@ runners cannot load, so anything worth testing must not touch it.
   bands, and that step was the mouth oscillation.
 - **One stiffness for every lateral force.** Faces are derived from plateaus (`GuideFace`), so a
   gentler force gets a shorter face, never a steeper one. Never give a lateral force its own ramp
-  dial — that is what made the funnel 3.5× the wall face.
+  dial — that is what made the funnel 3.5× the wall face. The barrier's width was the last such
+  dial: `BarrierWidthFloor` now holds its crest at the walls' stiffness, because at 40% and a width
+  of 400 a lever the base spring rested against it bounced 4000 counts and never settled.
+  Pinned by `ALeverRestingOnTheTracedBarrierSettles` and `NoCountOfTheBarrierIsSteeperThanTheWall`.
 - **Depth spans are not lateral spans.** Do not reach for `WallRamp` when you need a depth distance.
 - **A mouth shape may only ever remove force.** The shapes move the corridor's edge; nothing pushes
   outward, which is why they cannot self-excite. `TheMouthOnlyEverRemovesForce` sweeps the gate and

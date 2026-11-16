@@ -1217,6 +1217,7 @@
                                         <StackPanel>
                                             <local:ScaledTitledSlider ShowResetButton="True" Style="{StaticResource ScaledTuningSlider}" Title="Width of clicks between gear pairs (0–100)" RawMinimum="400" RawMaximum="8000" RawResetValue="2500" RawValue="{Binding BarrierWidth, Mode=TwoWay}" x:Name="TuningBarrierWidth54" />
                                             <TextBlock TextWrapping="Wrap" Text="How broad the small bumps between gear pairs feel. Lower gives short clicks; higher gives broader rises." Opacity="0.8" HorizontalAlignment="Left" MaxWidth="760" Margin="0,8,0,0" />
+                                            <TextBlock TextWrapping="Wrap" Text="{Binding BarrierWidenedNote}" Opacity="0.8" HorizontalAlignment="Left" MaxWidth="760" Margin="0,8,0,0" Visibility="{Binding BarrierIsWidened, Converter={StaticResource BoolToVis}}" />
                                             <TextBlock TextWrapping="Wrap" Text="This saved setting is outside the usual adjustment range. It is kept as saved until you adjust this control." Opacity="0.8" HorizontalAlignment="Left" MaxWidth="760" Margin="0,8,0,0" Visibility="{Binding HasValueOutsideScale, ElementName=TuningBarrierWidth54, Converter={StaticResource BoolToVis}}" />
                                         </StackPanel>
                                     </Border>

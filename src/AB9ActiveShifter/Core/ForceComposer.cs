@@ -53,6 +53,7 @@ namespace AB9ActiveShifter.Core
         private readonly int _columnDetentForce;
         private readonly int _patternEdgeForce;
         private readonly int _barrierForce;
+        private readonly int _barrierWidth;
         private readonly int _lockoutForce;
         private readonly int _homeSpringForce;
 
@@ -242,7 +243,21 @@ namespace AB9ActiveShifter.Core
             _channelGuideForce = Force(config.ChannelGuideForcePct, gain);
             _columnDetentForce = Force(config.ColumnDetentForcePct, gain);
             _patternEdgeForce = Force(config.PatternEdgeForcePct, gain);
-            _barrierForce = Force(config.BarrierForcePct, gain);
+            // A barrier is never steeper than the walls. Its width is raised to the floor that keeps
+            // its crest at the wall's stiffness, and where the gap has no room for that, its
+            // strength is lowered instead - a gentler force, never a steeper face.
+            int barrierForce = Force(config.BarrierForcePct, gain);
+            int barrierRoom = Math.Max(1, geometry.ColumnSpacing / 2);
+            int barrierWidth = Math.Max(Math.Max(1, config.BarrierWidth),
+                BarrierWidthFloor(barrierForce, _columnPinForce, config.WallRamp));
+            if (barrierWidth > barrierRoom && barrierWidth > config.BarrierWidth)
+            {
+                barrierWidth = Math.Max(barrierRoom, Math.Max(1, config.BarrierWidth));
+                barrierForce = Math.Min(barrierForce, (int)Math.Floor(
+                    _columnPinForce * (double)barrierWidth / (HumpCrestSlope * Math.Max(1, config.WallRamp))));
+            }
+            _barrierForce = barrierForce;
+            _barrierWidth = barrierWidth;
 
             // The hard modes pin the gate to full strength - that is what "hard" means - but
             // through the same Force path as everything else, so the overall gain and the 10%
@@ -1859,7 +1874,7 @@ namespace AB9ActiveShifter.Core
                 }
                 else
                 {
-                    total += Hump(d, _barrierForce, _cfg.BarrierWidth);
+                    total += Hump(d, _barrierForce, _barrierWidth);
                 }
             }
 
@@ -1894,6 +1909,40 @@ namespace AB9ActiveShifter.Core
 
             return pushSign * (int)Math.Round(strength * p);
         }
+
+        /// <summary>
+        /// How steep a <see cref="Hump"/> is at its crest, as a multiple of strength over width:
+        /// the derivative of u * exp(0.5 - u*u/2) at u = 0, which is exp(0.5). The crest is the
+        /// steepest point of the shape, so bounding it bounds the whole hump.
+        /// </summary>
+        public const double HumpCrestSlope = 1.6487212707001282;
+
+        /// <summary>
+        /// The narrowest a barrier of this strength may be without being steeper than the walls:
+        /// the width at which its crest has the walls' own stiffness, pin force over the wall's
+        /// bite. Strengths may be DirectInput units or percentages - only their ratio matters -
+        /// which is what lets the settings page ask the same question the composer does.
+        /// <para>
+        /// It exists because the width was the one lateral dial with a ramp of its own. At 40.2%
+        /// and a width of 400 the crest was 16.6 DI per count against the walls' 2.4, and a
+        /// lever the base's spring parked against it bounced 3300 to 4200 counts at 15 Hz and
+        /// never settled (trace-20261116-174017, trace-20261116-180817). The delayed-loop model
+        /// in BarrierSlopeTests reproduces that and settles with no delay; more absorption and
+        /// the slot wall's energy cap do not touch it, because the lever crosses the whole face
+        /// inside one round trip.
+        /// </para>
+        /// </summary>
+        public static int BarrierWidthFloor(double barrierStrength, double pinStrength, int wallRamp)
+        {
+            if (barrierStrength <= 0 || pinStrength <= 0 || wallRamp <= 0) return 1;
+            return (int)Math.Ceiling(HumpCrestSlope * barrierStrength * wallRamp / pinStrength);
+        }
+
+        /// <summary>The barrier strength actually rendered, after the steepness limit. A graph and a test read it.</summary>
+        public int BarrierForce { get { return _barrierForce; } }
+
+        /// <summary>The barrier width actually rendered, after the steepness limit. A graph and a test read it.</summary>
+        public int BarrierWidth { get { return _barrierWidth; } }
 
         /// <summary>
         /// The force of pushing over a hump: zero at the crest, peaking at <paramref name="width"/>

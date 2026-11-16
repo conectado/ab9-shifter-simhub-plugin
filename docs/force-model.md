@@ -605,6 +605,44 @@ handover window rather than by a flat 200 counts, which changes mouths at *every
 its own change and its own session on the rig. `AnAngledMouthStepsAtNarrowWidthsAndThatIsNotTheEdgeWall`
 holds the line where it is measured today, so a fix shows up there and a regression does too.
 
+### A barrier is never steeper than the walls
+
+The barrier's width used to be the one lateral dial with a ramp of its own, which is exactly what
+the one-stiffness rule forbids. A hump is `S * u * exp(0.5 - u*u/2)` with `u = d / width`, so its
+steepest point is the crest, at `exp(0.5) * S / width`. At 40.2% and a width of 400 that is
+16.6 DI per count; the same profile's walls are 8000 / 3285 = 2.4.
+
+Nothing notices while the lever only crosses barriers. On a four-column gate with the AB9's
+onboard spring at 50, the spring rests the lever at the axis centre, which is a barrier's crest,
+and the lever bounced 3300 to 4200 counts at about 15 Hz in neutral and never settled
+(trace-20261116-174017 and -180817; quiet until disturbed, quiet on 5+R). The hump there is
+dissipative on its face - about 4000 DI against the lever going in, about 2000 carrying it out -
+so the yield is not the source. The lever model fitted in `LateralBounceTests` reproduces it:
+
+| Barrier (at 40.2%) | 3 ms round trip | 4 ms | 5 ms |
+| --- | --- | --- | --- |
+| width 400, as dialled | 3577 | 4226 | 8048 |
+| width 1321 | 251 | 3706 | 5080 |
+| width 1750 | 0 | 0 | 4317 |
+| width 2642 | 0 | 0 | 397 |
+| no delay, width 400 | 77 | | |
+
+The lever crosses the whole 400-count face inside one round trip (120000 counts/s is 480 counts
+in 4 ms), so no stabiliser keyed on velocity reaches it in time.
+
+The composer now renders a barrier no narrower than `BarrierWidthFloor`: the width at which the
+crest has the walls' stiffness, pin force over the wall's bite. Where half the gap has no room
+for that, the strength comes down instead - a gentler force, never a steeper face. A barrier
+already gentle enough is untouched, which is every shipped preset and the default tune, and the
+Feel page says when a click is being widened and to what (`BarrierWidenedNote`).
+
+Rejected, with the model's numbers at a 3 ms round trip: more yield (80%: 3255), no yield
+(4235), and the slot wall's energy cap applied in neutral (3530, and worse at 4 ms). Plugin
+damping at 30 does settle it (0, and 458 at 4 ms) but is a global dial with its own costs, and
+leaves the steep face in place. Sliding the pattern so the home column is on the centre only
+stops the lever resting there. `BarrierSlopeTests` pins the bound, the untouched presets and the
+model. Not yet felt on the rig.
+
 ## Other patterns
 
 **Missing slots (6+R).** A slot that holds no gear is rendered by never opening its mouth: the
