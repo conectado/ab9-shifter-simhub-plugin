@@ -974,6 +974,12 @@
                                             <TextBlock TextWrapping="Wrap" Text="This saved setting is outside the usual adjustment range. It is kept as saved until you adjust this control." Opacity="0.8" HorizontalAlignment="Left" MaxWidth="760" Margin="0,8,0,0" Visibility="{Binding HasValueOutsideScale, ElementName=TuningPatternWidthPct38, Converter={StaticResource BoolToVis}}" />
                                         </StackPanel>
                                     </Border>
+                                    <Border Style="{StaticResource TuningSettingCard}">
+                                        <StackPanel>
+                                            <styles:SHToggleCheckbox IsChecked="{Binding CentreHomeColumn, Mode=TwoWay}" Content="Rest in the 3–4 column" Margin="0,2" />
+                                            <TextBlock TextWrapping="Wrap" Text="Slides the whole pattern sideways so the 3–4 column sits at the stick's centre, where a centring spring rests the lever. For patterns with four columns (7+R and 6+R); the others already rest there. Needs a pattern width of 75 or less to move all the way; wider than that it moves as far as it can." Opacity="0.8" HorizontalAlignment="Left" MaxWidth="760" Margin="0,8,0,0" />
+                                        </StackPanel>
+                                    </Border>
                                 </StackPanel>
                             </styles:SHSection>
                             <styles:SHSection Title="FREE MOVEMENT AND WALL CONTACT" ShowSeparator="True">

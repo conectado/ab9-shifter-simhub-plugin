@@ -48,7 +48,7 @@ dotnet build
 dotnet test tests/AB9ActiveShifter.Tests
 ```
 
-833 tests, all green, none touching I/O — `Core/`, the settings POCO's derived-dial arithmetic,
+843 tests, all green, none touching I/O — `Core/`, the settings POCO's derived-dial arithmetic,
 the pure release parser in `Updates/ReleaseInfo.cs`, and role output through a fake API. Keep them that way — they are the only
 automated check on force arithmetic, and a sign error here drives a 12 Nm base the wrong way.
 
@@ -222,6 +222,9 @@ tests/AB9ActiveShifter.Tests/
                            free, the wall only pushes home, and no axis count steps the stroke
   PatternWidthTests.cs     How wide the pattern stands: the default is the old geometry to the
                            count, narrowing is centred, and no bare axis loses its column
+  HomeColumnCentreTests.cs Sliding a four-column pattern so the 3-4 column stands on the axis centre: the
+                           default moves nothing, the shift is rigid and clamped, and the rest is
+                           clear of every barrier
   PatternEdgeWallTests.cs  The wall a narrowed pattern needs at its sides: one-way, zero inside,
                            inert at full width, and the angled mouth step it is NOT
   LockoutPlacementTests.cs Where the placement dial actually lands the gate, per pattern,

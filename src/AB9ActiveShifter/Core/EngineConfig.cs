@@ -480,6 +480,13 @@ namespace AB9ActiveShifter.Core
         /// </summary>
         public int PatternWidthPct = 100;
 
+        /// <summary>
+        /// Slides the whole pattern so the home column (gears 3 and 4) stands on the axis centre,
+        /// where the base's own spring rests the lever. Off by default, which is the centred
+        /// pattern every profile has always had. See GateGeometry for the clamp and the trace.
+        /// </summary>
+        public bool CentreHomeColumn;
+
         /// <summary>Which way through a Slot placement pays the toll.</summary>
         public LockoutSlotDirection LockoutSlotDirection = LockoutSlotDirection.Entry;
 
@@ -806,7 +813,8 @@ namespace AB9ActiveShifter.Core
                 LockoutPlacement,
                 LockoutGapDirection,
                 LockoutSlotGear,
-                PatternWidthPct);
+                PatternWidthPct,
+                CentreHomeColumn);
         }
     }
 }

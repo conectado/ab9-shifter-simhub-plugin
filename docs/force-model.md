@@ -605,6 +605,33 @@ handover window rather than by a flat 200 counts, which changes mouths at *every
 its own change and its own session on the rig. `AnAngledMouthStepsAtNarrowWidthsAndThatIsNotTheEdgeWall`
 holds the line where it is measured today, so a fix shows up there and a regression does too.
 
+### Where a four-column pattern rests
+
+Centring the pattern on the axis is right for three columns and wrong for four whenever the base
+has a centring spring of its own. A three-column gate has its home column on the axis centre. A
+four-column gate has the *barrier between the 3-4 and 5-6 columns* there, and the AB9's onboard
+spring centres on the axis, not on a column. With Spring 50 the lever was parked on that barrier:
+the hump pushes it off, the spring brings it back, and the yield takes more out of the inward
+pass than the outward one, so the pair pumps energy instead of losing it. Traced as a 16 Hz,
++/-1900-count lateral bounce in neutral on 6+R that needed only a return from a gear to start
+and never decayed (trace-20261116-174017, barrier 40.2% at width 400, pattern width 60). The
+same tune on 5+R is quiet, and the same lever sat still on 6+R until it was disturbed.
+
+**Rest in the 3–4 column** (`CentreHomeColumn`, default off) slides every column target by the
+same amount so the home column stands on the axis centre. It is a rigid shift: spacing, corridors,
+barrier crests and the lockout all move together, so no force changes shape and nothing new can
+ring. It is clamped to the bare axis the pattern width left free - a column is never pushed off
+the end of travel - and a four-column gate needs a width of 75 or less to move the whole
+half-spacing; `HomeColumnCentreRepaired` reports a shift that was cut short. It also puts third
+straight ahead of the resting lever, as on a real six-speed.
+
+Rejected: removing or weakening the barrier under the resting lever (the lever would still rest
+between two columns, and straight ahead would be a wall); moving the spring instead (the onboard
+spring's centre is not a parameter this plugin can set); and turning the base spring off for
+four-column patterns in favour of the home spring (it works, but gives up the spring the in-gear
+work is built on). `HomeColumnCentreTests` pins the default, the rigidity, the clamp and that the
+rest is clear of every barrier. Not yet felt on the rig.
+
 ## Other patterns
 
 **Missing slots (6+R).** A slot that holds no gear is rendered by never opening its mouth: the

@@ -302,6 +302,7 @@ protocol evidence and current hardware verification limits.
 | Control | What it changes |
 | --- | --- |
 | **Pattern width (0–100)** | How far apart the gear pairs feel. Lower gives a compact gate; higher gives a wider sweep. At 100 the outer pairs use the full sideways travel. |
+| **Rest in the 3–4 column** | Slides the whole pattern sideways so the 3–4 column sits at the stick's centre, where a centring spring rests the lever. For patterns with four columns (7+R and 6+R); the others already rest there. Needs a pattern width of 75 or less to move all the way; wider than that it moves as far as it can. |
 
 ### FREE MOVEMENT AND WALL CONTACT
 
@@ -593,6 +594,7 @@ force or add clearance again. In AB9 mode, try Base damper before extra software
 | What you feel or see | What to try |
 | --- | --- |
 | Gear pairs feel too far apart | Lower **Pattern width (0–100)**. |
+| A 7+R or 6+R lever rumbles side to side in neutral with the base spring on, or straight ahead from rest is a wall | Turn on **Rest in the 3–4 column**, with **Pattern width (0–100)** at 75 or less. |
 | Too much sideways play while in gear | Lower **Gear-slot width (0–100)** gradually. |
 | A gear trembles while seated | Widen **Gear-slot width** or lower **Gear-slot side walls**. |
 | Neutral feels too tightly guided | Raise **Neutral tunnel width (0–100)**. |

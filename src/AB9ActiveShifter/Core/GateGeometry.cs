@@ -134,6 +134,18 @@ namespace AB9ActiveShifter.Core
         /// <summary>The pattern width actually used, after clamping. 100 is the whole axis.</summary>
         public int PatternWidthPct { get; private set; }
 
+        /// <summary>Whether the pattern was asked to stand with its home column on the axis centre.</summary>
+        public bool CentreHomeColumn { get; private set; }
+
+        /// <summary>How far the whole pattern was slid sideways to do that, in counts. Zero when off.</summary>
+        public int PatternShift { get; private set; }
+
+        /// <summary>
+        /// True when the pattern is too wide to move the whole way, so the home column stands
+        /// as near the centre as the bare axis allowed. Reported so the UI can say so.
+        /// </summary>
+        public bool HomeColumnCentreRepaired { get; private set; }
+
         /// <summary>Distance between adjacent columns.</summary>
         public int ColumnSpacing { get { return PatternSpan / (ColumnCount - 1); } }
 
@@ -168,7 +180,8 @@ namespace AB9ActiveShifter.Core
             LockoutPlacement lockoutPlacement = LockoutPlacement.PatternDefault,
             LockoutGapDirection lockoutDirection = LockoutGapDirection.TowardHigh,
             int lockoutSlotGear = 8,
-            int patternWidthPct = 100)
+            int patternWidthPct = 100,
+            bool centreHomeColumn = false)
         {
             Pattern = pattern;
             ColumnCount = pattern == GatePattern.H5R || pattern == GatePattern.H6 ? 3 : 4;
@@ -232,6 +245,32 @@ namespace AB9ActiveShifter.Core
             {
                 _targets[i] = low + (int)Math.Round(
                     i * (double)PatternSpan / (ColumnCount - 1), MidpointRounding.AwayFromZero);
+            }
+
+            // Optionally slide the whole pattern so the home column stands on the axis centre.
+            // A four-column gate centred on the axis has no column there - the centre is the
+            // crest of the barrier between the 3-4 and 5-6 columns - and the base's own spring
+            // centres on the axis, not on a column. With that spring on, the lever was parked
+            // on the barrier, which pushed it off while the spring brought it back: traced as a
+            // 16 Hz, +/-1900-count lateral bounce in neutral on 6+R at AB9 Spring 50
+            // (trace-20261116-174017), quiet on 5+R where the centre IS the home column.
+            //
+            // It is a rigid shift of every target, so spacing, corridors, barriers and the
+            // lockout all move together and every force keeps the shape it had. It is clamped to
+            // the bare axis the pattern width left free - a column is never pushed off the end
+            // of travel - and a shift that had to be cut short is reported rather than silent.
+            // A four-column gate needs a width of 75 or less to move the whole half-spacing.
+            CentreHomeColumn = centreHomeColumn;
+            PatternShift = 0;
+            HomeColumnCentreRepaired = false;
+            if (centreHomeColumn && pattern != GatePattern.Sequential && pattern != GatePattern.Prnd
+                && pattern != GatePattern.Handbrake)
+            {
+                int wanted = AxisCenter - _targets[(int)HomeColumn];
+                int shift = Clamp(wanted, -_targets[0], AxisMax - _targets[ColumnCount - 1]);
+                for (int i = 0; i < ColumnCount; i++) _targets[i] += shift;
+                PatternShift = shift;
+                HomeColumnCentreRepaired = shift != wanted;
             }
 
             PlaceLockout(lockoutHalfWidth, lockoutPlacement, lockoutDirection, lockoutSlotGear);

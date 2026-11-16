@@ -117,6 +117,7 @@ namespace AB9ActiveShifter
         private LockoutGapDirection _lockoutGapDirection = LockoutGapDirection.TowardHigh;
         private int _lockoutSlotGear = 8;
         private int _patternWidthPct = 100;
+        private bool _centreHomeColumn;
         private LockoutSlotDirection _lockoutSlotDirection = LockoutSlotDirection.Entry;
         private LockoutMode _lockoutMode = LockoutMode.PushThrough;
         private PrndLockoutGap _prndLockoutGap = PrndLockoutGap.Off;
@@ -603,6 +604,19 @@ namespace AB9ActiveShifter
                 NotifySpacingDependents();
             }
         }
+
+        /// <summary>
+        /// Slides the whole pattern sideways so the column holding gears 3 and 4 stands on the
+        /// stick's centre - where a base with its own centring spring rests the lever, and where
+        /// a real H lever rests. It matters for the four-column patterns: centred on the axis
+        /// they have a barrier at the centre, not a column. The three-column patterns already
+        /// have their home column there, so for them it changes nothing.
+        /// <para>
+        /// The move is limited to the bare travel the pattern width left free, so a four-column
+        /// pattern needs a width of 75 or less to move all the way.
+        /// </para>
+        /// </summary>
+        public bool CentreHomeColumn { get { return _centreHomeColumn; } set { Set(ref _centreHomeColumn, value); } }
 
         /// <summary>
         /// Whether the gate machinery (mouths, humps, walls) applies at all. Named for what it
@@ -1209,6 +1223,7 @@ namespace AB9ActiveShifter
                 LockoutGapDirection = LockoutGapDirection,
                 LockoutSlotGear = LockoutSlotGear,
                 PatternWidthPct = PatternWidthPct,
+                CentreHomeColumn = CentreHomeColumn,
                 LockoutSlotDirection = LockoutSlotDirection,
                 LockoutMode = LockoutMode,
                 PrndLockoutGap = PrndLockoutGap,
@@ -1314,6 +1329,7 @@ namespace AB9ActiveShifter
                 ColumnInnerHalfEnter = d.ColumnInnerHalfEnter;
                 ColumnInnerHalfExit = d.ColumnInnerHalfExit;
                 PatternWidthPct = d.PatternWidthPct;
+                CentreHomeColumn = d.CentreHomeColumn;
                 EngageDepth = d.EngageDepth;
                 ReleaseDepth = d.ReleaseDepth;
                 DetentHysteresis = d.DetentHysteresis;

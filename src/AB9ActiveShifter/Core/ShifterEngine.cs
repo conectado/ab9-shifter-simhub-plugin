@@ -1567,6 +1567,7 @@ namespace AB9ActiveShifter.Core
 
                 // Moves every column target, so the whole gate is rebuilt around it.
                 && a.PatternWidthPct == b.PatternWidthPct
+                && a.CentreHomeColumn == b.CentreHomeColumn
 
                 && a.ChannelHalfEnter == b.ChannelHalfEnter
                 && a.ChannelHalfExit == b.ChannelHalfExit

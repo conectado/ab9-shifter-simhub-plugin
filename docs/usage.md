@@ -85,6 +85,10 @@ stick, which is right for 7+R and a lot of reach for the three-column patterns �
 where it is, with the live gate above the slider showing it happen. Around 67% gives a
 three-column pattern the same reach a 7+R has.
 
+A four-column pattern centred on the stick has no column at the centre: the middle is the gap
+between the 3–4 and 5–6 columns. If the base has a centring spring, turn on *Rest in the 3–4
+column* in Geometry, which slides the pattern so the lever rests where a real one does.
+
 Narrowing leaves bare travel outside the outermost columns, with no gear in it and — because the
 neutral tunnel is deliberately free — nothing to stop the lever sliding into it. *Wall at the
 pattern edge*, under the same slider, is that edge: one-way, inward only, zero everywhere inside
